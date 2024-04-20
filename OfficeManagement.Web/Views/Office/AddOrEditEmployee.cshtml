@@ -1,0 +1,31 @@
+﻿@model EmployeeViewModel;
+
+<div class="modal-body container">
+    <div id="practiceForm">
+        @Html.HiddenFor(model => model.EmployeeId, new { @class = "form-control", id = "" })
+        <div class="row">
+            <div class="col-md-6">
+                <label class="required">Employee Name</label>
+            </div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "", placeholder = "--Add Employee--", autocomplete = "off" })
+            </div>
+        </div>
+        <div class="row mt-md-3">
+            <div class="col-md-6">
+                <label class="required">Project Name</label>
+            </div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", id = "", placeholder = "--Add Project--", autocomplete = "off" })
+            </div>
+        </div>
+        <div>
+            <div class="col-md-6">
+                <label class="required">Experience</label>
+            </div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(model => model.Experience, new { @class = "form-control", id = "", placeholder = "--Add Experience--", autocomplete = "off" })
+            </div>
+        </div>
+    </div>
+</div>

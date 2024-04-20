@@ -1,0 +1,18 @@
+﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<button type="button" class="btn btn-primary" id="addEmployee">Add Employee</button>
+<div id="EditModal"></div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#addEmployee').on('click', function () {
+            AddEmployee('');
+        });
+
+        function AddEmployee(employeeId){
+            var url = '@Url.Action("AddEmployeeDialog", "Office")';
+            window.location.href = url;
+        }
+    });
+</script>
