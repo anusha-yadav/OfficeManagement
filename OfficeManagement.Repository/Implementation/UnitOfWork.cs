@@ -16,6 +16,7 @@ namespace OfficeManagement.Repository.Implementation
         {
             Context = context;
             Employee = new EmployeeRepository(context);
+
         }
 
         public IEmployeeRepository Employee

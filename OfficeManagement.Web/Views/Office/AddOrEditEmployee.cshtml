@@ -1,31 +1,170 @@
 ﻿@model EmployeeViewModel;
 
-<div class="modal-body container">
-    <div id="practiceForm">
-        @Html.HiddenFor(model => model.EmployeeId, new { @class = "form-control", id = "" })
-        <div class="row">
-            <div class="col-md-6">
-                <label class="required">Employee Name</label>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    .horizontal-radio-buttons input[type="radio"] {
+        display: inline-block;
+        margin-right: 10px; 
+    }
+
+    .horizontal-radio-buttons label {
+        display: inline-block;
+    }
+
+    .horizontal-checkboxes {
+        display: flex;
+        flex-wrap: nowrap; 
+    }
+
+    .horizontal-checkboxes input[type="checkbox"],
+    .horizontal-checkboxes label {
+        flex: 0 0 auto; 
+        margin-right: 10px; 
+    }
+
+    .modal-dialog {
+        max-width: 700px; 
+    }
+
+    .modal-content {
+        width: 100%; 
+    }
+
+    .modal-body {
+        max-height: 500px; 
+        overflow-y: auto; 
+    }
+</style>
+
+<div id="popupModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closePopupBtn">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="col-md-6">
-                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "", placeholder = "--Add Employee--", autocomplete = "off" })
+            <div class="modal-body">
+                <div id="employeeForm">
+                    @Html.HiddenFor(model => model.EmployeeId, new { @class = "form-control", id = "EmployeeId" })
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="">Employee Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "Name", placeholder = "--Add Employee--", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="row mt-md-3">
+                        <div class="col-md-6">
+                            <label class="">Project Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", id = "ProjectName", placeholder = "--Add Project--", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="row mt-md-3">
+                        <div class="col-md-6">
+                            <label class="">Experience</label>
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Experience, new { @class = "form-control", id = "Experience", placeholder = "--Add Experience--", autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="row mt-md-3">
+                        <div class="col-md-6">
+                            <label class="">Department</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="departmentOptions" class="horizontal-radio-buttons"></div>
+                        </div>
+                    </div>
+                    <div class="row mt-md-3">
+                        <div class="col-md-6">
+                            <label class="">Skills</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="skillsetOptions" class="horizontal-checkboxes"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row mt-md-3">
-            <div class="col-md-6">
-                <label class="required">Project Name</label>
-            </div>
-            <div class="col-md-6">
-                @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", id = "", placeholder = "--Add Project--", autocomplete = "off" })
-            </div>
-        </div>
-        <div>
-            <div class="col-md-6">
-                <label class="required">Experience</label>
-            </div>
-            <div class="col-md-6">
-                @Html.TextBoxFor(model => model.Experience, new { @class = "form-control", id = "", placeholder = "--Add Experience--", autocomplete = "off" })
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="saveEmployeeBtn" data-dismiss="modal">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Office/GetDepartments',
+            type: 'GET',
+            success: function (departments) {
+                $('#departmentOptions').empty();
+                departments.forEach(function (department) {
+                    var radioButton = $('<input type="radio" name="department" value="' + department.value + '">');
+                    var label = $('<label>').text(department.text);
+                    $('#departmentOptions').append(radioButton).append(label).append('<br>');
+                });
+                $('#popupModal').modal('show');
+            }
+        });
+
+        function displaySkillsets(departmentId) {
+            $.ajax({
+                url: '/Office/GetSkillsets', 
+                type: 'GET',
+                data: { departmentId: departmentId },
+                success: function (skillsets) {
+                    $('#skillsetOptions').empty();
+                    skillsets.forEach(function (skillset) {
+                        var checkbox = $('<input type="checkbox" name="skillset" value="' + skillset.skillsetId + '">');
+                        var label = $('<label>').text(skillset.skillsetName);
+                        $('#skillsetOptions').append(checkbox).append(label).append('<br>');
+                    });
+                }
+            });
+        }
+
+        $(document).on('change', 'input[name="department"]', function () {
+            var selectedDepartmentId = $(this).val();
+            displaySkillsets(selectedDepartmentId);
+        });
+
+        $('#saveEmployeeBtn').click(function () {
+            saveEmployee();
+        });
+    });
+
+    function saveEmployee() {
+        debugger;
+        var employee = {
+            Name: $('#Name').val(),
+            ProjectName: $('#ProjectName').val(),
+            Experience: $('#Experience').val(),
+            DepartmentId: $('input[name="department"]:checked').val(), 
+            SkillsetIds: $('input[name="skillset"]:checked').map(function () {
+                return $(this).val();
+            }).get()
+        };
+
+        $.ajax({
+            url: '/Office/SaveDetails',
+            type: 'POST',
+            data: employee,
+            success: function () {
+                alert('Employee details saved successfully!');
+                $('#popupModal').modal('hide');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error saving employee details:', error);
+                alert('Error saving employee details. Please try again later.');
+            }
+        });
+    }
+
+</script>

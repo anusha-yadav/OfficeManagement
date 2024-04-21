@@ -29,17 +29,17 @@ namespace OfficeManagement.Common.ViewModels
         /// <summary>
         /// Email
         /// </summary>
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Details
         /// </summary>
-        public string Details { get; set; }
+        public string? Details { get; set; }
 
         /// <summary>
         /// SkillsetIds
         /// </summary>
-        public List<int>SkillsetIds { get; set; }
+        public List<int> SkillsetIds { get; set; } = new List<int>();
 
         /// <summary>
         /// DepartmentId

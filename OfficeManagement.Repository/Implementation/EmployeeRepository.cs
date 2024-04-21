@@ -29,13 +29,30 @@ namespace OfficeManagement.Repository.Implementation
             {
                  employee = new Employee();
             }
+            int projectId = SaveProjectDetails(viewModel.ProjectName);
             employee.EmployeeName = viewModel.Name;
             employee.DepartmentId = viewModel.DepartmentId;
             employee.Experience = viewModel.Experience;
-            employee.Email = viewModel.Email;
-            employee.ProjectId = viewModel.ProjectId;
+            employee.ProjectId = projectId;
             SaveSkillsets(viewModel);
+            Context.Add(employee);
             SaveChanges();
+        }
+
+        private int SaveProjectDetails(string  projectName)
+        {
+            var project = Context.Projects.Where(x=>x.ProjectName.ToLower() == projectName.ToLower()).FirstOrDefault();
+            if(project == null)
+            {
+                project = new();
+            }
+            project.ProjectName = projectName;
+            if(project == null)
+            {
+                Context.Projects.Add(project);
+                Context.SaveChanges();
+            }
+            return project.ProjectId;
         }
 
         private void SaveSkillsets(EmployeeViewModel employee)
@@ -49,6 +66,7 @@ namespace OfficeManagement.Repository.Implementation
                     EmployeeId = employee.EmployeeId,
                 });
             }
+            Context.EmployeeSkills.AddRange(employeeSkillset);
             Context.SaveChanges();
         }
 

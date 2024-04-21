@@ -1,18 +1,31 @@
-﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<button type="button" class="btn btn-primary" id="addEmployee">Add Employee</button>
-<div id="EditModal"></div>
+
+<div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" id="openPopupBtn">Add Employee</button>
+</div>
+<div id="popupContent"></div>
 
 
 <script>
     $(document).ready(function () {
-        $('#addEmployee').on('click', function () {
-            AddEmployee('');
+        $("#openPopupBtn").click(function () {
+            $.ajax({
+                url: '@Url.Action("AddEmployeeDialog", "Office")',
+                type: 'GET',
+                success: function (data) {
+                    // Load the returned partial view into a popup or a section of your page
+                    $('#popupContent').html(data);
+                    $('#popupModal').show();
+                }
+            });
         });
 
-        function AddEmployee(employeeId){
-            var url = '@Url.Action("AddEmployeeDialog", "Office")';
-            window.location.href = url;
-        }
+        // Close the popup when the close button is clicked
+        $(document).on('click', '#closePopupBtn', function () {
+            debugger;
+            $('#popupModal').modal('hide');
+        });
     });
 </script>

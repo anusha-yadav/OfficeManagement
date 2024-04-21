@@ -8,21 +8,48 @@ using System.Threading.Tasks;
 
 namespace OfficeManagement.Data.Entities
 {
+    /// <summary>
+    /// Employee
+    /// </summary>
     public class Employee
     {
+        /// <summary>
+        /// EmployeeId
+        /// </summary>
         [Key]
         public int EmployeeId { get; set; }
-        public string EmployeeName { get; set; }
-        public string Email { get; set; }
+
+        /// <summary>
+        /// EmployeeName
+        /// </summary>
+        public string? EmployeeName { get; set; }
+
+        /// <summary>
+        /// Experience
+        /// </summary>
         public decimal Experience { get; set; }
+
+        /// <summary>
+        /// DepartmentId
+        /// </summary>
         public int DepartmentId { get; set; }
+
+        /// <summary>
+        /// ProjectId
+        /// </summary>
         public int ProjectId { get; set; }
 
+        /// <summary>
+        /// Department
+        /// </summary>
         [ForeignKey("DepartmentId")]
-        public virtual Department Department { get; set; }
+        public virtual Department? Department { get; set; }
 
+        /// <summary>
+        /// Project
+        /// </summary>
         [ForeignKey("ProjectId")]
-        public virtual Projects Project { get; set; }
+        public virtual Projects? Project { get; set; }
 
     }
 }

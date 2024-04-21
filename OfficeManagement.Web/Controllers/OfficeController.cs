@@ -20,7 +20,6 @@ namespace OfficeManagement.Web.Controllers
         public OfficeController(IEmployeeService employeeService) 
         {
             EmployeeService = employeeService;
-            
         }
 
         /// <summary>
@@ -55,9 +54,31 @@ namespace OfficeManagement.Web.Controllers
         /// SaveDetails
         /// </summary>
         /// <param name="employee"></param>
+        [HttpPost]
         public void SaveDetails(EmployeeViewModel employee)
         {
             EmployeeService.SaveDetails(employee);
+        }
+
+        /// <summary>
+        /// GetDepartments
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetDepartments()
+        {
+            var department = EmployeeService.GetDepartments();
+            return Json(department);
+        }
+
+        /// <summary>
+        /// GetSkillsets
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <returns></returns>
+        public List<SkillsetViewModel> GetSkillsets(int departmentId)
+        {
+            var skillsets = EmployeeService.GetSkillsets(departmentId);
+            return skillsets;
         }
     }
 }

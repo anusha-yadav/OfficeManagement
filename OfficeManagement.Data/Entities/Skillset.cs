@@ -8,14 +8,31 @@ using System.Threading.Tasks;
 
 namespace OfficeManagement.Data.Entities
 {
+    /// <summary>
+    /// Skillset
+    /// </summary>
     public class Skillset
     {
+        /// <summary>
+        /// SkillsetId
+        /// </summary>
         [Key]
         public int SkillsetId { get; set; }
-        public string SkillsetName { get; set; }
+
+        /// <summary>
+        /// SkillsetName
+        /// </summary>
+        public string? SkillsetName { get; set; }
+
+        /// <summary>
+        /// DepartmentId
+        /// </summary>
         public int DepartmentId { get; set; }
 
+        /// <summary>
+        /// Department
+        /// </summary>
         [ForeignKey("DepartmentId")]
-        public virtual Department Department { get; set; }
+        public virtual Department? Department { get; set; }
     }
 }
